@@ -68,6 +68,7 @@ user.prototype.toJSON = function() {
   delete userData.password; // it doesn't delete password from database, only removes it. 
   
   return userData;
+}
 
 
   return user; // add functions above 
