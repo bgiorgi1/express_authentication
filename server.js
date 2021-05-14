@@ -28,6 +28,9 @@ app.use(session({
 }));
 
 app.use(flash());            // flash middleware
+app.use(passport.initialize());      // Initialize passport
+app.use(passport.session());         // Add a session
+
 app.use((req, res, next) => {
   console.log(res.locals);
   res.locals.alerts = req.flash(); //library that allows quick flash messages anytime a user logsin/logsout/wrong pw
@@ -36,18 +39,25 @@ app.use((req, res, next) => {
 });
 
 
-app.use(passport.initialize());      // Initialize passport
-app.use(passport.session());         // Add a session
+
+
+
 
 app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.get('/profile', (req, res) => {
-  res.render('profile');
-});
+// app.get('/profile', (req, res) => {
+//   res.render('profile');
+// });
 
 app.use('/auth', require('./controllers/auth'));
+
+app.get('/profile', isLoggedIn, (req, res) => {
+  const { id, name, email } = req.user.get(); 
+  console.log('inside of profile')
+  res.render('profile', { id, name, email });
+});
 
 
 const PORT = process.env.PORT || 3000;
